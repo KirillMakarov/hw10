@@ -52,12 +52,13 @@ int main (int argc, char* argv[])
 	TypeSkipList list;
 	tick();
 	int i = 0;
-	for (i = 0; i < 200 * 100//  * 10
+	for (i = 0; i < 20//  * 10
 		; ++i)
 	{
 		list.insert(i, i);
 	}
 	tack("SkipList over integers creation");
+	
 
 	TypeSkipNode * node = 0;
 
@@ -68,43 +69,48 @@ int main (int argc, char* argv[])
 	tack("OrderedList over integers searching");
 
 	tick();
-	node = list.findFirst(i - 5);
+	node = list.findFirst(0);
 	cout << "Element found:" << node->m_value << endl;
 	tack("SkipList over integers searching");
 	// End of: Test SkipList over integers
+		list.remove(node);
 
-	try{
-		// Test #1
-		JournalNetActivity<50> journal1;
-		journal1.parseLog("test1.log");
-		testJournal(journal1, "e-maxx.ru", TimeStamp(2015,6,10,10,33,1), TimeStamp(2015,6,10,10,33,4));
+	TypeSkipNode * node2 = 0;
+	node2 = list.findFirst(6);
+		for (TypeSkipNode * nn = list.getPreHead()->m_next; nn->m_next != list.getPreHead(); nn=nn->m_next)
+			cout<< nn->m_value<<"\n";
+	//try{
+	//	// Test #1
+	//	JournalNetActivity<50> journal1;
+	//	journal1.parseLog("test1.log");
+	//	testJournal(journal1, "e-maxx.ru", TimeStamp(2015,6,10,10,33,1), TimeStamp(2015,6,10,10,33,4));
 
-		// Test #2
-		JournalNetActivity<50> journal2;
-		journal2.parseLog("test2.log");
-		testJournal(journal2, "verisicretproxi.com", TimeStamp(2015,6,10,10,33,54), TimeStamp(2015,6,10,10,33,54));
+	//	// Test #2
+	//	JournalNetActivity<50> journal2;
+	//	journal2.parseLog("test2.log");
+	//	testJournal(journal2, "verisicretproxi.com", TimeStamp(2015,6,10,10,33,54), TimeStamp(2015,6,10,10,33,54));
 
-		// Test #3
-		JournalNetActivity<50> journal3;
-		tick();
-		journal3.parseLog("test3.log");
-		tack("Parsing test3.log");
-		testJournal(journal3, "verisicretproxi.com", TimeStamp(2015,6,10,12,27,45), TimeStamp(2015,6,10,12,27,59));
+	//	// Test #3
+	//	JournalNetActivity<50> journal3;
+	//	tick();
+	//	journal3.parseLog("test3.log");
+	//	tack("Parsing test3.log");
+	//	testJournal(journal3, "verisicretproxi.com", TimeStamp(2015,6,10,12,27,45), TimeStamp(2015,6,10,12,27,59));
 
-		// Test #4
-		JournalNetActivity<50> journal4;
-		tick();
-		journal4.parseLog("test4.log");
-		tack("Parsing test4.log:");
-		testJournal(journal4, "verisicretproxi.com", TimeStamp(2015,6,10,22,30,20), TimeStamp(2015,6,10,22,30,50));
-	}
-	catch(exception &e){
-		cout << e.what();
-	}
-	catch (...){
-		cout << "something wrong happend." << endl;
-	}
-	cout << endl;
+	//	// Test #4
+	//	JournalNetActivity<50> journal4;
+	//	tick();
+	//	journal4.parseLog("test4.log");
+	//	tack("Parsing test4.log:");
+	//	testJournal(journal4, "verisicretproxi.com", TimeStamp(2015,6,10,22,30,20), TimeStamp(2015,6,10,22,30,50));
+	//}
+	//catch(exception &e){
+	//	cout << e.what();
+	//}
+	//catch (...){
+	//	cout << "something wrong happend." << endl;
+	//}
+	//cout << endl;
 
 	system("pause");
 	return EXIT_SUCCESS;

@@ -46,7 +46,7 @@ NodeSkipList<Value, Key, numLevels>::NodeSkipList(Key key, Value value)
 template <class Value, class Key, int numLevels>
 SkipList<Value, Key, numLevels>::SkipList(double probability)
 {
-	srand (time(NULL)); //Это необходимо для того, чтобы в списке все элементы имели разную вероятность при каждом запуске
+	srand (2); //Это необходимо для того, чтобы в списке все элементы имели разную вероятность при каждом запуске
 	m_probability = probability;
 	for (int i = 0; i < numLevels; ++i)
 	{
@@ -195,20 +195,35 @@ NodeSkipList<Value,Key, numLevels> * SkipList<Value,Key,numLevels>::findFirst(Ke
 
 
 template <class Value, class Key, int numLevels>
-void SkipList<Value,Key,numLevels>:: remove(NodeSkipList<Value,Key, numLevels> * beforeNode) {
-	if (beforeNode -> m_next != m_pPreHead){
+void SkipList<Value,Key,numLevels>:: remove(NodeSkipList<Value,Key, numLevels> * node) {
 
-		for (int i = beforeNode -> m_levelHighest; i >= 0; i--) {
-			//Перекидываем c nodeBefore на послеследующую, если nodeBefore не последний
-			if (beforeNode -> m_nextjump[i] != m_pPreHead) {
-				beforeNode -> m_nextjump[i] = beforeNode -> m_nextjump[i] -> m_nextjump[i];
+	if (node != m_pPreHead){
+		TypeNode* tempNode;
+
+		for (int i = node -> m_levelHighest; i >= 0; i--){
+			tempNode = m_pPreHead;
+			while (tempNode -> m_nextjump[i] != m_pPreHead
+				&& tempNode -> m_nextjump[i] != node)
+			{
+				//переходим к следующему узлу на этом уровне
+				tempNode = tempNode -> m_nextjump[i];
 			}
+			//tempNode это элемент перед node на текущем уровнe
+			if (tempNode -> m_nextjump[i] != m_pPreHead) //если нода вообще не из этого списка
+			tempNode -> m_nextjump[i] = node -> m_nextjump[i];
 		}
-		TypeNode* toDelete = beforeNode -> m_next;
-		beforeNode -> m_next = beforeNode -> m_next -> m_next;
-		delete [] *(toDelete->m_nextjump);
-		delete toDelete;
+
+		tempNode =m_pPreHead;
+		while (tempNode -> m_next != m_pPreHead
+			&& tempNode -> m_next != node)
+		{
+			tempNode = tempNode -> m_next;
+		}
+		tempNode -> m_next = node->m_next;
+
+		delete node;
 	}
+
 }
 
 //=============================================================================
