@@ -61,76 +61,43 @@ SkipList<Value, Key, numLevels>::SkipList(double probability)
 template <class Value, class Key, int numLevels>
 void SkipList<Value, Key, numLevels> :: insert(Value value, Key key){
 	TypeNode *nodeForInsert = new TypeNode(key, value);
-	TypeNode *beforeNode = findLastLessThan(key); //за log n ищем элемент после которого вставлять
-
-	/*
-	В задании не указано нужно ли сохранять устойчивость (если есть несколько элементов
-	с одинаковым ключом, то последний вставленный будет в конце).
-
-	Исходя из условия решаемой задачи нам совершенно неважно, какой элемент мы раньше добавили
-	в список,
-	если у двух запросов время совпадает с точностью до секунды.
-
-	Так как порядок элементов с одинаковыми key не важен, то не будем его поддерживать.
-
-	Гарантируется лишь то, что все элементы будут добавлены в список по порядку и элементы с одинаковыми
-	key будут рядом.
-	*/
-
-	//Включим элемент в главный список (не разреженный)
-	nodeForInsert -> m_next = beforeNode -> m_next;
-	beforeNode -> m_next = nodeForInsert;
 
 	//добавим элемент в разреженный список:
-	double current_prob;
-	int j = 0;
-	while (j < numLevels)
-	{
-		current_prob = (double)(rand())/RAND_MAX ;
-		j++;
-		if (current_prob < m_probability)
-		{
-			(nodeForInsert -> m_levelHighest)++;
-			int curLevel = nodeForInsert ->m_levelHighest;
+	int level_of_insert = -1;
+	double current_prob = (double)(rand())/RAND_MAX ;
 
-			//добавлением одной проверки убираем ненужные пробежки с самого начала.
-			if (beforeNode -> m_levelHighest >= curLevel)
-			{
-				nodeForInsert -> m_nextjump[curLevel] = beforeNode -> m_nextjump[curLevel];
-				beforeNode -> m_nextjump[curLevel] = nodeForInsert;
-			}
-			else 
-			{
-				/*
-				обновляем элемент, который стоит до.
-				реализуем поиск сверху до этого уровня за O(logn) (log будет когда numLevel подобрано верно), 
-				где n - число элементов на curLevel,
-				*/
-				beforeNode = m_pPreHead;
-				for (int i = m_pPreHead -> m_levelHighest; i >= curLevel; i--){
-					/*
-					на каждом уровне проверяем выход за границы и также, чтобы следующий элемент
-					был строго меньше, чем key
-					*/
-					while (beforeNode -> m_nextjump[i] != m_pPreHead
-						&& beforeNode -> m_nextjump[i] -> m_key < key)
-					{
-						//переходим к следующему узлу на этом уровне
-						beforeNode = beforeNode -> m_nextjump[i];
-					}
-					//beforeNode это последний элемент с m_key < key на текущем уровне
-				}
-				//beforeNode это последний элемент с m_key < key на уровне curLevel
-				nodeForInsert -> m_nextjump[curLevel] = beforeNode -> m_nextjump[curLevel];
-				beforeNode -> m_nextjump[curLevel] = nodeForInsert;
-			}
-		}
-		else 
+	while (current_prob < m_probability && level_of_insert < numLevels - 1)
+	{
+		level_of_insert++;
+		current_prob = (double)(rand())/RAND_MAX;
+			//level_of_insert == highLevel for nodeForInsert
+	}
+	nodeForInsert -> m_levelHighest = level_of_insert;
+
+	TypeNode *tempNode = m_pPreHead;
+	for (int i = m_pPreHead -> m_levelHighest; i >= 0; i--){
+		/*
+		на каждом уровне проверяем выход за границы и также, чтобы следующий элемент
+		был строго меньше, чем key
+		*/
+		while (tempNode -> m_nextjump[i] != m_pPreHead
+			&& tempNode -> m_nextjump[i] -> m_key < key)
 		{
-			break;//Если на этот уровень не добавляем, то и выше тоже.
+			//переходим к следующему узлу на этом уровне
+			tempNode = tempNode -> m_nextjump[i];
+		}
+		//tempNode это последний элемент с m_key < key на текущем уровне
+		if (i <= nodeForInsert -> m_levelHighest){
+			nodeForInsert -> m_nextjump[i] = tempNode-> m_nextjump[i];
+			tempNode -> m_nextjump[i] = nodeForInsert;
 		}
 	}
-	//добавление элемента в худшем случае выполнится за O(log n * numLevels). logn - поиск позиции на текущем левеле
+
+	while (tempNode -> m_next != m_pPreHead && tempNode ->m_next -> m_key < key)
+		tempNode = tempNode -> m_next;
+	
+	nodeForInsert -> m_next = tempNode -> m_next;
+	tempNode -> m_next = nodeForInsert;
 }
 
 
@@ -210,7 +177,7 @@ void SkipList<Value,Key,numLevels>:: remove(NodeSkipList<Value,Key, numLevels> *
 			}
 			//tempNode это элемент перед node на текущем уровнe
 			if (tempNode -> m_nextjump[i] != m_pPreHead) //если нода вообще не из этого списка
-			tempNode -> m_nextjump[i] = node -> m_nextjump[i];
+				tempNode -> m_nextjump[i] = node -> m_nextjump[i];
 		}
 
 		tempNode =m_pPreHead;

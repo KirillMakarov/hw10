@@ -64,7 +64,7 @@ void JournalNetActivity<numLevels>::outputSuspiciousActivities(
 	while (beforeFrom ->m_next != m_Journal.getPreHead() && beforeFrom -> m_next -> m_key <= timeTo)
 	{
 		beforeFrom = beforeFrom -> m_next;
-		cout<<beforeFrom->m_value;
-		cout<<endl;
+		if (beforeFrom -> m_value.m_host == hostSuspicious)
+			cout<<beforeFrom->m_value<<endl;
 	}
 }
