@@ -1,4 +1,5 @@
-#include "StdAfx.h"
+//#include "StdAfx.h"
+#define _CRT_SECURE_NO_WARNINGS
 #include "TimeStamp.h"
 
 #include <iostream>

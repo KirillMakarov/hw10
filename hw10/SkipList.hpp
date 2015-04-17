@@ -1,5 +1,5 @@
-#include <cstdlib>
-
+﻿#include <cstdlib>
+//Kirill Makarov
 //=============================================================================
 //== NodeSkipList =============================================================
 //=============================================================================
@@ -56,6 +56,43 @@ SkipList<Value, Key, numLevels>::SkipList(double probability)
 }
 
 // Put your code here
+
+template <class Value, class Key, int numLevels>
+void SkipList<Value, Key, numLevels> :: insert(Value value, Key key){
+
+	//Node* temp = OrderedList::pPrehead;
+	//for (int i =  m_levelHighest; i > 0; i--)
+	//{
+	//	temp = findLastLessThan(key);//после этого вставляем
+	//}
+
+
+}
+
+
+//template <class Value, class Key, int numLevels>
+//Node * SkipList<Value,Key,numLevels>::findLastLessThan(Key key) const
+//{
+//	//this
+//	//Node* temp  = orderedList::m_pPreHead;
+//	//for (int i = m_levelHighest; i > 0; i--){
+//	//	//на каждом уровне
+//	//	while (run->m_next != m_pPreHead
+//	//		&& run->m_next->m_key < key)
+//	//	{
+//	//		run = run->m_next;
+//	//	}
+//	//}
+//}
+
+//
+//Node * findFirst(Key key){
+//
+//}
+//
+//void remove(Node * nodeBefore) {
+//
+//}
 
 //=============================================================================
 //== End of: SkipList =========================================================
