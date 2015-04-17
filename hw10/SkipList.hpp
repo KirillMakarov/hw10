@@ -70,20 +70,21 @@ void SkipList<Value, Key, numLevels> :: insert(Value value, Key key){
 }
 
 
-//template <class Value, class Key, int numLevels>
-//Node * SkipList<Value,Key,numLevels>::findLastLessThan(Key key) const
-//{
-//	//this
-//	//Node* temp  = orderedList::m_pPreHead;
-//	//for (int i = m_levelHighest; i > 0; i--){
-//	//	//на каждом уровне
-//	//	while (run->m_next != m_pPreHead
-//	//		&& run->m_next->m_key < key)
-//	//	{
-//	//		run = run->m_next;
-//	//	}
-//	//}
-//}
+template <class Value, class Key, int numLevels>
+NodeSkipList<Value,Key, numLevels> * SkipList<Value,Key,numLevels>::findLastLessThan(Key key) const
+{
+	//	//this
+	//	//Node* temp  = orderedList::m_pPreHead;
+	//	//for (int i = m_levelHighest; i > 0; i--){
+	//	//	//на каждом уровне
+	//	//	while (run->m_next != m_pPreHead
+	//	//		&& run->m_next->m_key < key)
+	//	//	{
+	//	//		run = run->m_next;
+	//	//	}
+	//	//}
+	return nullptr;
+}
 
 //
 //Node * findFirst(Key key){
