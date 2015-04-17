@@ -45,11 +45,11 @@ void testJournal(const JournalNetActivity<numLevels> & journal, string host, con
 
 int main (int argc, char* argv[])
 {
-	//// Test SkipList over integers
-	//typedef SkipList<int,int,15> TypeSkipList;
-	//typedef TypeSkipList::TypeNode TypeSkipNode;
+	// Test SkipList over integers
+	typedef SkipList<int,int,15> TypeSkipList;
+	typedef TypeSkipList::TypeNode TypeSkipNode;
 
-	//TypeSkipList list;
+	TypeSkipList list;
 	//tick();
 	//int i = 0;
 	//for (i = 0; i < 200 * 1000; ++i)
