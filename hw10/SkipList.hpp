@@ -63,17 +63,31 @@ void SkipList<Value, Key, numLevels> :: insert(Value value, Key key){
 	TypeNode *nodeForInsert = new TypeNode(key, value);
 	TypeNode *beforeNode = findLastLessThan(key); //за log n ищем элемент после которого вставлять
 
+	/*
+	В задании не указано нужно ли сохранять устойчивость (если есть несколько элементов
+	с одинаковым ключом, то последний вставленный будет в конце).
+
+	Исходя из условия решаемой задачи нам совершенно неважно, какой элемент мы раньше добавили
+	в список,
+	если у двух запросов время совпадает с точностью до секунды.
+
+	Так как порядок элементов с одинаковыми key не важен, то не будем его поддерживать.
+
+	Гарантируется лишь то, что все элементы будут добавлены в список по порядку и элементы с одинаковыми
+	key будут рядом.
+	*/
+
 	//Включим элемент в главный список (не разреженный)
 	nodeForInsert -> m_next = beforeNode -> m_next;
 	beforeNode -> m_next = nodeForInsert;
 
 	//добавим элемент в разреженный список:
 	double current_prob;
-	int i = 0;
-	while (i < numLevels)
+	int j = 0;
+	while (j < numLevels)
 	{
 		current_prob = (double)(rand())/RAND_MAX ;
-		i++;
+		j++;
 		if (current_prob < m_probability)
 		{
 			(nodeForInsert -> m_levelHighest)++;
@@ -88,19 +102,25 @@ void SkipList<Value, Key, numLevels> :: insert(Value value, Key key){
 			else 
 			{
 				/*
-					обновляем элемент, который стоит до.
-					здесь можно также реализовать поиск сверху до этого уровня за O(logn), 
-					где n - число элементов на curLevel,
-					но в задании не требуется, чтобы insert работал за O(logn). 
+				обновляем элемент, который стоит до.
+				реализуем поиск сверху до этого уровня за O(logn) (log будет когда numLevel подобрано верно), 
+				где n - число элементов на curLevel,
 				*/
 				beforeNode = m_pPreHead;
-				while (beforeNode -> m_nextjump[curLevel] != m_pPreHead
-					&& beforeNode -> m_nextjump[curLevel] -> m_key < key)
-				{
-					//переходим к следующему узлу на этом уровне
-					beforeNode = beforeNode -> m_nextjump[curLevel];
+				for (int i = m_pPreHead -> m_levelHighest; i >= curLevel; i--){
+					/*
+					на каждом уровне проверяем выход за границы и также, чтобы следующий элемент
+					был строго меньше, чем key
+					*/
+					while (beforeNode -> m_nextjump[i] != m_pPreHead
+						&& beforeNode -> m_nextjump[i] -> m_key < key)
+					{
+						//переходим к следующему узлу на этом уровне
+						beforeNode = beforeNode -> m_nextjump[i];
+					}
+					//beforeNode это последний элемент с m_key < key на текущем уровне
 				}
-				//вставляем после tempNode
+				//beforeNode это последний элемент с m_key < key на уровне curLevel
 				nodeForInsert -> m_nextjump[curLevel] = beforeNode -> m_nextjump[curLevel];
 				beforeNode -> m_nextjump[curLevel] = nodeForInsert;
 			}
@@ -110,6 +130,7 @@ void SkipList<Value, Key, numLevels> :: insert(Value value, Key key){
 			break;//Если на этот уровень не добавляем, то и выше тоже.
 		}
 	}
+	//добавление элемента в худшем случае выполнится за O(log n * numLevels). logn - поиск позиции на текущем левеле
 }
 
 
