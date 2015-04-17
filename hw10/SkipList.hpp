@@ -73,19 +73,38 @@ void SkipList<Value, Key, numLevels> :: insert(Value value, Key key){
 template <class Value, class Key, int numLevels>
 NodeSkipList<Value,Key, numLevels> * SkipList<Value,Key,numLevels>::findLastLessThan(Key key) const
 {
-	TypeNode *node = m_pPreHead;
-	//this
-	//Node* temp  = orderedList::m_pPreHead;
-	//for (int i = m_levelHighest; i > 0; i--){
-	//	//на каждом уровне
-	//	while (run->m_next != m_pPreHead
-	//		&& run->m_next->m_key < key)
-	//	{
-	//		run = run->m_next;
-	//	}
-	//}
-	//return node;
-	return nullptr;
+	TypeNode *tempNode = m_pPreHead;
+	/*
+		Так как по заданию numLevels -- это количество разреженных уровне,
+		то на уровне m_nextjump[0] -- могут отказаться не все узлы из первоначального списка
+		и существует еще более низкий уровень, где обращение идет по m_next
+		Начнем искать элемент с самого верхнего уровня, а затем еще и проверим на уровне, где есть все элементы
+
+		m_pPreHead := Sentinel element - placed before first and after last elements
+		Значит, если мы дошли до этого элемента, то мы уже вышли за пределы списка на этом уровне.
+	*/
+	for (int i = m_pPreHead -> m_levelHighest; i >= 0; i--){
+			/*
+				на каждом уровне проверяем выход за границы и также, чтобы следующий элемент
+				был строго меньше, чем key
+			*/
+			while (tempNode -> m_nextjump[i] != m_pPreHead
+				&& tempNode -> m_nextjump[i] -> m_key < key)
+			{
+				//переходим к следующему узлу на этом уровне
+				tempNode = tempNode -> m_nextjump[i];
+			}
+			//tempNode это последний элемент с m_key < key на текущем уровне
+	}
+
+	//доделываем поиск на заданном (не разреженный) связном списке.
+	while (tempNode -> m_next != m_pPreHead && tempNode ->m_next -> m_key < key)
+	{
+		tempNode = tempNode -> m_next;
+	}
+
+	return tempNode;
+
 }
 
 

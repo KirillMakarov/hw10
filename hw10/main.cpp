@@ -50,7 +50,7 @@ int main (int argc, char* argv[])
 	typedef TypeSkipList::TypeNode TypeSkipNode;
 
 	TypeSkipList list;
-	//tick();
+	tick();
 	//int i = 0;
 	//for (i = 0; i < 200 * 1000; ++i)
 	//{
