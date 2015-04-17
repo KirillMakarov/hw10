@@ -1,4 +1,4 @@
-
+﻿
 #include "JournalNetActivity.h"
 
 #include <fstream>
@@ -58,5 +58,13 @@ template <int numLevels>
 void JournalNetActivity<numLevels>::outputSuspiciousActivities(
 	string hostSuspicious, const TimeStamp & timeFrom, const TimeStamp & timeTo) const
 {
-	// The code here was occasionaly lost....
+	TypeList::TypeNode *beforeFrom;
+	beforeFrom = m_Journal.findLastLessThan(timeFrom);
+
+	while (beforeFrom ->m_next != m_Journal.getPreHead() && beforeFrom -> m_next -> m_key <= timeTo)
+	{
+		beforeFrom = beforeFrom -> m_next;
+		cout<<beforeFrom->m_value;
+		cout<<endl;
+	}
 }
