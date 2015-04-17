@@ -51,11 +51,11 @@ int main (int argc, char* argv[])
 
 	TypeSkipList list;
 	tick();
-	//int i = 0;
-	//for (i = 0; i < 200 * 1000; ++i)
-	//{
-	//	list.insert(i, i);
-	//}
+	int i = 0;
+	for (i = 0; i < 200 * 1000; ++i)
+	{
+		list.insert(i, i);
+	}
 	//tack("SkipList over integers creation");
 
 	//TypeSkipNode * node = 0;
