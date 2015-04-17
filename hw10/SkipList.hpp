@@ -195,11 +195,19 @@ NodeSkipList<Value,Key, numLevels> * SkipList<Value,Key,numLevels>::findFirst(Ke
 
 
 template <class Value, class Key, int numLevels>
-void SkipList<Value,Key,numLevels>:: remove(NodeSkipList<Value,Key, numLevels> * node) {
-	if (node != m_pPreHead)
-	{
-		delete [] *(node -> m_nextjump);
-		delete node;
+void SkipList<Value,Key,numLevels>:: remove(NodeSkipList<Value,Key, numLevels> * beforeNode) {
+	if (beforeNode -> m_next != m_pPreHead){
+
+		for (int i = beforeNode -> m_levelHighest; i >= 0; i--) {
+			//Перекидываем c nodeBefore на послеследующую, если nodeBefore не последний
+			if (beforeNode -> m_nextjump[i] != m_pPreHead) {
+				beforeNode -> m_nextjump[i] = beforeNode -> m_nextjump[i] -> m_nextjump[i];
+			}
+		}
+		TypeNode* toDelete = beforeNode -> m_next;
+		beforeNode -> m_next = beforeNode -> m_next -> m_next;
+		delete [] *(toDelete->m_nextjump);
+		delete toDelete;
 	}
 }
 
